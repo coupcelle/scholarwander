@@ -5,7 +5,7 @@ use clap::Parser;
 // use openssl::cms;
 // use std::env;
 // use std::fmt;
-use std::fs;
+use std::{fs, io::BufReader};
 
 // use std::io::{BufReader, Cursor};
 use xml::reader::{EventReader, XmlEvent};
@@ -50,10 +50,9 @@ fn main() {
     // }
 }
 
-fn parse_xml<T: IntoIterator<Item = Result<XmlEvent, E>>, E: std::error::Error>(
-    xml: T,
-) -> Result<usize, String> {
+fn parse_xml<T: std::io::Read>(xml: T) -> Result<usize, String> {
     let mut depth = 0;
+    let xml = EventReader::new(BufReader::new(xml));
     for e in xml {
         match e {
             Ok(XmlEvent::StartElement { name, .. }) => {

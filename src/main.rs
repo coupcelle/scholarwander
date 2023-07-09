@@ -42,16 +42,14 @@ fn main() {
     //         // if let Ok(res_str) = String::from_utf8(outData.clone()) {
     //         //     println!("{}", res_str);
     //         // }
-
-    //         let data = BufReader::new(outData.as_slice()); // Buffering is important for performance
-    //         let parser = EventReader::new(data);
-    //         parse_xml(parser)?
+    //         parse_xml(outData.as_slice())?
     //     }
     // }
 }
 
-fn parse_xml<T: std::io::Read>(xml: T) -> Result<usize, String> {
+fn parse_xml<T: std::io::Read>(xml: T) -> Result<usize, xml::reader::Error> {
     let mut depth = 0;
+    // buffering is apparently important for performance
     let xml = EventReader::new(BufReader::new(xml));
     for e in xml {
         match e {
@@ -65,7 +63,7 @@ fn parse_xml<T: std::io::Read>(xml: T) -> Result<usize, String> {
             }
             Err(e) => {
                 eprintln!("Error: {e}");
-                break;
+                return Err(e);
             }
             // There's more: https://docs.rs/xml-rs/latest/xml/reader/enum.XmlEvent.html
             _ => {}

@@ -2,12 +2,11 @@
 /// This is the entrypoint for a program meant for development and testing of features.
 /// It may later become a CLI script for scholarwander, but feel free to use it and hack on it for development and testing
 use clap::Parser;
-// use openssl::cms;
-// use std::env;
-// use std::fmt;
+use openssl::cms;
+use std::env;
+use std::fmt;
 use std::{fs, io::BufReader};
 
-// use std::io::{BufReader, Cursor};
 use xml::reader::{EventReader, XmlEvent};
 
 #[cfg(test)]
@@ -27,24 +26,24 @@ fn main() {
     let cloudconfig_cipherdata: Vec<u8> =
         fs::read(args.cloudconfig).expect("Should have been able to read the file");
 
-    // let config = cms::CMSOptions::NO_SIGNER_CERT_VERIFY;
+    let config = cms::CMSOptions::NO_SIGNER_CERT_VERIFY;
     // config::set()
 
-    // if let Ok(mut cmsinfo) = cms::CmsContentInfo::from_der(&cloudconfig_cipherdata) {
-    //     let mut outData: Vec<u8> = Vec::new();
-    //     if let Ok(result) = cmsinfo.verify(
-    //         None,               //certs:
-    //         None,               //store:
-    //         None,               //detached_data:
-    //         Some(&mut outData), //output_data:
-    //         config,             //flags:
-    //     ) {
-    //         // if let Ok(res_str) = String::from_utf8(outData.clone()) {
-    //         //     println!("{}", res_str);
-    //         // }
-    //         parse_xml(outData.as_slice())?
-    //     }
-    // }
+    if let Ok(mut cmsinfo) = cms::CmsContentInfo::from_der(&cloudconfig_cipherdata) {
+        let mut outData: Vec<u8> = Vec::new();
+        if let Ok(result) = cmsinfo.verify(
+            None,               //certs:
+            None,               //store:
+            None,               //detached_data:
+            Some(&mut outData), //output_data:
+            config,             //flags:
+        ) {
+            // if let Ok(res_str) = String::from_utf8(outData.clone()) {
+            //     println!("{}", res_str);
+            // }
+            parse_xml(outData.as_slice()).unwrap();
+        }
+    }
 }
 
 fn parse_xml<T: std::io::Read>(xml: T) -> Result<usize, xml::reader::Error> {

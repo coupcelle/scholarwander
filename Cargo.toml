@@ -8,5 +8,4 @@ edition = "2021"
 [dependencies]
 clap = { version = "4.3.11", features = ["derive"] }
 keyring = "2.0.4"
-openssl = "0.10.55"
 xml-rs = "0.8.15"

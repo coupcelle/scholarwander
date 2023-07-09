@@ -7,6 +7,8 @@ use std::fs;
 use std::fmt;
 use openssl::cms;
 
+use std::io::{BufReader, Cursor};
+use xml::reader::{EventReader, XmlEvent};
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -37,9 +39,30 @@ fn main() {
             config //flags: 
         ){
 
-            if let Ok(res_str) = String::from_utf8(outData) {
-                println!("{}", res_str);
+            // if let Ok(res_str) = String::from_utf8(outData.clone()) {
+            //     println!("{}", res_str);
+            // }
 
+            let data = BufReader::new(outData.as_slice()); // Buffering is important for performance
+            let parser = EventReader::new(data);
+            let mut depth = 0;
+            for e in parser {
+                match e {
+                    Ok(XmlEvent::StartElement { name, .. }) => {
+                        println!("{:spaces$}+{name}", "", spaces = depth * 2);
+                        depth += 1;
+                    }
+                    Ok(XmlEvent::EndElement { name }) => {
+                        depth -= 1;
+                        println!("{:spaces$}-{name}", "", spaces = depth * 2);
+                    }
+                    Err(e) => {
+                        eprintln!("Error: {e}");
+                        break;
+                    }
+                    // There's more: https://docs.rs/xml-rs/latest/xml/reader/enum.XmlEvent.html
+                    _ => {}
+                }
             }
 
         }

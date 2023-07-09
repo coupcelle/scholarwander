@@ -7,4 +7,5 @@ edition = "2021"
 
 [dependencies]
 keyring = "2.0.4"
+openssl = "0.10.55"
 xml-rs = "0.8.15"

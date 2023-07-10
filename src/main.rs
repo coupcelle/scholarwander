@@ -38,10 +38,14 @@ fn main() {
             Some(&mut outData), //output_data:
             config,             //flags:
         ) {
-            // if let Ok(res_str) = String::from_utf8(outData.clone()) {
-            //     println!("{}", res_str);
-            // }
-            cloudconfig::CloudConfig::from_xml(outData.as_slice()).unwrap();
+            if let Ok(res_str) = String::from_utf8(outData.clone()) {
+                // println!("{}", res_str);
+                let config = cloudconfig::CloudConfig::from_xml(&res_str).unwrap();
+                println!("{}", config);
+
+
+            }
+            
         }
     }
 }

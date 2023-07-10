@@ -49,7 +49,7 @@ fn main() {
 fn parse_xml<T: std::io::Read>(xml: T) -> Result<usize, xml::reader::Error> {
     let mut depth = 0;
     // buffering is apparently important for performance
-    let xml = EventReader::new(BufReader::new(xml));
+    let xml = EventReader::new(xml);
     for e in xml {
         match e {
             Ok(XmlEvent::StartElement { name, .. }) => {

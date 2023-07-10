@@ -7,6 +7,7 @@
 |   [ ]      | enrollapi.py       |         14 |                      3 | x509 cert enrollment                                       |
 |   [ ]      | keystore.py        |          9 |                      4 | TPM, crts, privkeys oh my                                  |
 |   [ ]      | logger.py          |          3 |                      1 | good first commit                                          |
+|   [ ]      | memutils.py        |          0 |                      2 | good first commit for someone who has worked with C before |
 |   [ ]      | netdev.py          |          1 |                      1 | good first commit                                          |
 |   [ ]      | resourcemanager.py |          1 |                      1 | good first commit                                          |
 |   [ ]      | secrets.py         |          2 |                      2 | encryption library used here                               |

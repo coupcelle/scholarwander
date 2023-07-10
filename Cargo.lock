@@ -657,6 +657,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "itoa"
+version = "1.0.8"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "62b02a5381cc465bd3041d84623d0fa3b66738b52b8e2fc3bab8ad63ab032f4a"
+
+[[package]]
 name = "keyring"
 version = "2.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1052,6 +1058,7 @@ dependencies = [
  "openssl",
  "serde",
  "serde-xml-rs",
+ "serde_path_to_error",
  "serde_repr",
 ]
 
@@ -1127,6 +1134,16 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.25",
+]
+
+[[package]]
+name = "serde_path_to_error"
+version = "0.1.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "8acc4422959dd87a76cb117c191dcbffc20467f06c9100b76721dab370f24d3a"
+dependencies = [
+ "itoa",
+ "serde",
 ]
 
 [[package]]

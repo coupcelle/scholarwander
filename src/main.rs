@@ -6,6 +6,8 @@ use openssl::cms;
 use std::env;
 use std::fmt;
 use std::fs;
+use serde_xml_rs::{Error};
+use serde_xml_rs::de::from_str;
 
 
 mod cloudconfig;
@@ -40,7 +42,17 @@ fn main() {
         ) {
             if let Ok(res_str) = String::from_utf8(outData.clone()) {
                 // println!("{}", res_str);
-                let config = cloudconfig::CloudConfig::from_xml(&res_str).unwrap();
+                let config = match cloudconfig::CloudConfig::from_xml(&res_str)  {
+                    Ok(cfg) => cfg,
+                    Err(error)=> {
+                        let jd = &mut serde_xml_rs::de::Deserializer::new_from_reader(res_str.as_bytes());
+                        let result: Result<cloudconfig::CloudConfig, _> = serde_path_to_error::deserialize(jd).map_err(|err| {
+                            return println!("Failed to parse : {}", err);//'{}', res_str
+                        });
+                        panic!("{}", error)
+                    }
+                };
+            
                 println!("{}", config);
                 if let Some(creds) = &config.configurations.deviceConfiguration[0].actions[0].action[1].credentials {
                     println!("{}", creds.tlsEnrollment.webSSOUrl);

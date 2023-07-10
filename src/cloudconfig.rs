@@ -152,6 +152,90 @@ pub struct PKIClient{
 pub struct Certificate{
 	pub data: String
 }
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct WlanProfile {
+	#[serde(rename = "type")]
+	pub wlanProfileType: u8,
+	pub preferedNetworkLocation: u8,
+	pub credentialsUUID: String,
+	pub name: String,
+	pub scope: u8,
+	pub ssids: Vec<SSID>,
+	pub eap: EAP,
+	pub sso: SSO,
+	pub securew2: SecureW2,
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct SSID {
+	pub priority: u8,
+	pub ssidConfig: SSIDConfig,
+	pub connection: Connection,
+	pub security: Security,
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct SSIDConfig {
+	pub name: String,
+	pub nonBroadcast: bool
+}
+
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct Connection {
+	pub connectionType: u8,
+	pub connectionMode: u8,
+}
+
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct Security {
+	pub securityType: u8,
+	pub encryptionType: u8,
+}
+
+
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct EAP {
+	pub eapMethod: String,//TODO: make me an enum
+	pub authorId: u8,
+	pub enableServerValidation: bool,
+	pub caCertificates: Vec<CACertificate>, 
+	pub serverNames: String,
+	pub useRegex: bool,
+	pub enableFastReconnect: bool,
+	pub allowNewConnections: bool,
+	pub innerEapOptional: bool,
+	pub enableQuarantineChecks: bool,
+	pub requireCryptoBinding: bool,
+	pub windowsLogon: bool,
+	pub cacheUserData: bool,
+	pub authMode: u8
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct CACertificate{
+	pub alias: String,
+	pub fingerPrint: String,
+	pub useSystemStore: bool,
+	pub useDpiSSL: bool,
+	pub useFirefoxCertStore: bool,
+}
+
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct SSO {
+	pub useSingleSignOn: bool,
+	pub ssoType: u8,
+	pub ssoMaxDelay: u8,
+}
+
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct SecureW2 {
+	pub bypassBalloonNotification: bool
 }
 
 
@@ -165,7 +249,33 @@ pub struct Action {
 	pub minimumVersion: Option<String>,
 	pub customization: Option<Resources>,
 	pub credentials: Option<Credentials>,
+	pub removeSSID: Option<RemoveSSID>,
+	pub wlanProfile: Option<WlanProfile>,
+	pub deviceMatches: Option<Vec<DeviceMatch>>,
+	pub checkForIP: Option<bool>
 }
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct DeviceMatch {
+	pub deviceMatchAttributes: Vec<DeviceMatchAttribute>
+}
+
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct DeviceMatchAttribute {
+	pub attribute: String,
+	pub operator: String,
+	pub value: String,
+}
+
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct RemoveSSID {
+	pub name: String,
+	pub removeType: u8
+}
+
+
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct Configuration {

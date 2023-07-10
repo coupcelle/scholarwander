@@ -18,7 +18,7 @@ pub struct Organization {
 	pub name: String,
 	pub normalizedName: String,
 	pub domainName: String,
-	pub UID: u16,
+	pub UID: u32,
 }
 
 
@@ -151,7 +151,7 @@ pub struct Credentials {
 	pub UUID: String,
 	pub useRegex: bool,
 	#[serde(rename = "TLSEnrollment")]
-	pub tlsEnrollment: TLSEnrollment,
+	pub tlsEnrollment: Option<TLSEnrollment>,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
@@ -333,8 +333,8 @@ pub struct DeviceConfiguration {
 	pub enforceScreenLock: bool,
 	pub enableForgetSSIDSteps: bool,
 	pub enableTLSMigration: bool,
-	pub mobileconfigDescriptionMacOS: String,
-	pub mobileconfigDescriptionIOS: String,
+	pub mobileconfigDescriptionMacOS: Option<String>,
+	pub mobileconfigDescriptionIOS: Option<String>,
 	pub reporting: Hand,
 	pub actions: Vec<Act>,
 }

@@ -9,7 +9,11 @@ pub struct CloudConfig {
 
 impl CloudConfig {
 
+	/// Create a CloudConfig instance from xml
 	pub fn from_xml<T: std::io::Read>(xml: T) -> Result<CloudConfig, xml::reader::Error> {
+
+		//in future it may be better to use something like https://docs.rs/serde-xml-rs/latest/serde_xml_rs/, but that may require parsing the full structure instead of cherry picking individual values from the config.
+
 		let mut depth = 0;
 		let xml = EventReader::new(xml);
 		for e in xml {

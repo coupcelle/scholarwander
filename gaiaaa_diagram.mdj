@@ -40028,29 +40028,6 @@
 							}
 						}
 					]
-				},
-				{
-					"_type": "UMLClass",
-					"_id": "AAAAAAGJOQq2uvKsdaY=",
-					"_parent": {
-						"$ref": "AAAAAAFF+qBWK6M3Z8Y="
-					},
-					"name": "VersionRequest",
-					"ownedElements": [
-						{
-							"_type": "UMLGeneralization",
-							"_id": "AAAAAAGJOQu8lfO9niY=",
-							"_parent": {
-								"$ref": "AAAAAAGJOQq2uvKsdaY="
-							},
-							"source": {
-								"$ref": "AAAAAAGJOQq2uvKsdaY="
-							},
-							"target": {
-								"$ref": "AAAAAAGJOC/XBYyYpDY="
-							}
-						}
-					]
 				}
 			]
 		},
@@ -43016,6 +42993,29 @@
 								"$ref": "AAAAAAGJOCzYlYlMyOo="
 							},
 							"name": "nextgen_configinfo"
+						}
+					]
+				},
+				{
+					"_type": "UMLClass",
+					"_id": "AAAAAAGJOQq2uvKsdaY=",
+					"_parent": {
+						"$ref": "AAAAAAGJOC/XA4wkpAs="
+					},
+					"name": "VersionRequest",
+					"ownedElements": [
+						{
+							"_type": "UMLGeneralization",
+							"_id": "AAAAAAGJOQu8lfO9niY=",
+							"_parent": {
+								"$ref": "AAAAAAGJOQq2uvKsdaY="
+							},
+							"source": {
+								"$ref": "AAAAAAGJOQq2uvKsdaY="
+							},
+							"target": {
+								"$ref": "AAAAAAGJOC/XBYyYpDY="
+							}
 						}
 					]
 				}

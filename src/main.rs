@@ -42,7 +42,10 @@ fn main() {
                 // println!("{}", res_str);
                 let config = cloudconfig::CloudConfig::from_xml(&res_str).unwrap();
                 println!("{}", config);
+                if let Some(creds) = &config.configurations.deviceConfiguration[0].actions[0].action[1].credentials {
+                    println!("{}", creds.tlsEnrollment.webSSOUrl);
 
+                }
 
             }
             

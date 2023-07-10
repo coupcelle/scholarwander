@@ -15,7 +15,7 @@ the Debian/Ubuntu way to do this is using the command `sudo apt-get install pkg-
 To build run `cargo build`
 
 
-## Running
+## Running/Usage
 
-To run, use the command `cargo run -- --cloudconfig ../edurams/RIT/_RIT_SecureW2_JoinNow.run.extracted/tar_w2/SecureW2.cloudconfig` (assumes this repository and the `edurams` folder are located in the same folder)
+To run, use the command `cargo run -- --cloudconfig ../path/to/SecureW2.cloudconfig`
 

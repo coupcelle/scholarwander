@@ -5,7 +5,7 @@ use clap::Parser;
 use openssl::cms;
 use std::env;
 use std::fmt;
-use std::{fs, io::BufReader};
+use std::fs;
 
 
 mod cloudconfig;

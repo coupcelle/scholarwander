@@ -7,7 +7,8 @@ use std::env;
 use std::fmt;
 use std::{fs, io::BufReader};
 
-use xml::reader::{EventReader, XmlEvent};
+
+mod cloudconfig;
 
 #[cfg(test)]
 mod tests;
@@ -27,7 +28,6 @@ fn main() {
         fs::read(args.cloudconfig).expect("Should have been able to read the file");
 
     let config = cms::CMSOptions::NO_SIGNER_CERT_VERIFY;
-    // config::set()
 
     if let Ok(mut cmsinfo) = cms::CmsContentInfo::from_der(&cloudconfig_cipherdata) {
         let mut outData: Vec<u8> = Vec::new();
@@ -41,32 +41,7 @@ fn main() {
             // if let Ok(res_str) = String::from_utf8(outData.clone()) {
             //     println!("{}", res_str);
             // }
-            parse_xml(outData.as_slice()).unwrap();
+            cloudconfig::CloudConfig::from_xml(outData.as_slice()).unwrap();
         }
     }
-}
-
-fn parse_xml<T: std::io::Read>(xml: T) -> Result<usize, xml::reader::Error> {
-    let mut depth = 0;
-    // buffering is apparently important for performance
-    let xml = EventReader::new(xml);
-    for e in xml {
-        match e {
-            Ok(XmlEvent::StartElement { name, .. }) => {
-                println!("{:spaces$}+{name}", "", spaces = depth * 2);
-                depth += 1;
-            }
-            Ok(XmlEvent::EndElement { name }) => {
-                depth -= 1;
-                println!("{:spaces$}-{name}", "", spaces = depth * 2);
-            }
-            Err(e) => {
-                eprintln!("Error: {e}");
-                return Err(e);
-            }
-            // There's more: https://docs.rs/xml-rs/latest/xml/reader/enum.XmlEvent.html
-            _ => {}
-        }
-    }
-    Ok(depth)
 }

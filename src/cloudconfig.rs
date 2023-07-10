@@ -6,32 +6,32 @@ use std::fmt;
 
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-struct Subscription {
-	purchaseDate: u64,
-	purchaseExpireDate: u64,
-	supportExpireDate: u64,
+pub struct Subscription {
+	pub purchaseDate: u64,
+	pub purchaseExpireDate: u64,
+	pub supportExpireDate: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-struct Organization {
-	name: String,
-	normalizedName: String,
-	domainName: String,
-	UID: u8,
+pub struct Organization {
+	pub name: String,
+	pub normalizedName: String,
+	pub domainName: String,
+	pub UID: u16,
 }
 
 
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-struct LocaleString{
-	id: u8,
-	text: String,
+pub struct LocaleString{
+	pub id: u16,
+	pub text: String,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-struct Resources {
-	locales: Vec<String>,
-	strings: Vec<LocaleString>,
+pub struct Resources {
+	pub locales: Vec<String>,
+	pub strings: Vec<LocaleString>,
 }
 
 
@@ -51,26 +51,26 @@ struct Resources {
 
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-struct Handler {
+pub struct Handler {
 	#[serde(rename = "type")]
-	handlerType: u8,
-	enable: bool,
-	reportUserIdentity: bool,
-	reportIP: bool,
-	server: String,
-	service: String,
-	port: u8,
-	useSSL: bool,
+	pub handlerType: u8,
+	pub enable: bool,
+	pub reportUserIdentity: bool,
+	pub reportIP: bool,
+	pub server: String,
+	pub service: String,
+	pub port: u16,
+	pub useSSL: bool,
 }
 
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-struct Handlers {
-	handlers: Vec<Handler>,
+pub struct Handlers {
+	pub handlers: Vec<Handler>,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-enum ActionType { 
+pub enum ActionType { 
 	NONE                    = 0,
 	REPORT                  = 1,
 	LOCKSCREEN              = 2,
@@ -117,67 +117,69 @@ enum ActionType {
 // }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-struct Credentials {
+pub struct Credentials {
 	#[serde(rename = "type")]
-	credentialsType: u8,
-	UUID: String,
-	useRegex: bool,
-	tlsEnrollment: TLSEnrollment,
+	pub redentialsType: u8,
+	pub UID: String,
+	pub seRegex: bool,
+	pub lsEnrollment: TLSEnrollment,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-struct TLSEnrollment {
-	protocol: u8,
-	URL: String,
-	caIdentity: String,
-	keySize: u8,
-	sanType: u8,
-	pkiClient: PKIClient,
-	useTPM: bool,
-	requireTPM: bool,
-	caCertificates: Vec<Certificate>,
-	webSSOUrl: String,
-	webSSOConfirmType:u8,
-}
-
-
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
-struct PKIClient{
-	usePKIClient: bool,
-	forcePKIClient: bool,
+pub struct TLSEnrollment {
+	pub protocol: u8,
+	pub URL: String,
+	pub caIdentity: String,
+	pub keySize: u16,
+	pub sanType: u8,
+	pub pkiClient: PKIClient,
+	pub useTPM: bool,
+	pub requireTPM: bool,
+	pub caCertificates: Vec<Certificate>,
+	pub webSSOUrl: String,
+	pub webSSOConfirmType:u8,
 }
 
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-struct Certificate{
-	data: String
+pub struct PKIClient{
+	pub usePKIClient: bool,
+	pub forcePKIClient: bool,
 }
 
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-struct Action {
+pub struct Certificate{
+	pub data: String
+}
+}
+
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct Action {
 	#[serde(rename = "type")]
-	actionType: ActionType,
-	failAction: u8,
-	removeOnFailure: bool,
-	minimumVersion: String,
-	customization: Resources,
-	credentials: Credentials,
+	pub actionType: ActionType,
+	pub failAction: u8,
+	pub removeOnFailure: bool,
+	pub enable: Option<bool>,
+	pub minimumVersion: Option<String>,
+	pub customization: Option<Resources>,
+	pub credentials: Option<Credentials>,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-struct Configuration {
-	name: String,
-	profileUUID: String,
-	customization: Resources,
-	requireAdminPrivileges: bool,
-	enforceScreenLock: bool,
-	enableForgetSSIDSteps: bool,
-	enableTLSMigration: bool,
-	mobileconfigDescriptionMacOS: String,
-	mobileconfigDescriptionIOS: String,
-	reporting: Handlers,
-	actions: Vec<Action>,
+pub struct Configuration {
+	pub name: String,
+	pub profileUUID: String,
+	pub customization: Resources,
+	pub requireAdminPrivileges: bool,
+	pub enforceScreenLock: bool,
+	pub enableForgetSSIDSteps: bool,
+	pub enableTLSMigration: bool,
+	pub mobileconfigDescriptionMacOS: String,
+	pub mobileconfigDescriptionIOS: String,
+	pub reporting: Handlers,
+	pub actions: Vec<Action>,
 }
 
 

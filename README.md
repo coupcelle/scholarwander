@@ -3,8 +3,11 @@
 **Initial Release Target:**
 
 Audience: LUG members and other techies interested in a FOSS alternativel to SecureW2
+
 Platform: NetworkManager initially
+
 Schools Supported: RIT and NCSU
+
 Timeline: By Aug 10, 2023
 
 ## Building

@@ -52,7 +52,11 @@ fn main() {
             
                 println!("{}", config);
                 if let Some(creds) = &config.configurations.deviceConfiguration[0].actions[0].action[1].credentials {
-                    println!("{}", creds.tlsEnrollment.webSSOUrl);
+                    let enrollmentdata = match &creds.tlsEnrollment {
+                        Some(tlsEnrollment) => &tlsEnrollment.webSSOUrl.as_str(),
+                        None => "Web SSO is not used for auth"
+                    };
+                    println!("{}", enrollmentdata);
 
                 }
 

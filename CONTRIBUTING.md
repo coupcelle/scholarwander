@@ -18,3 +18,18 @@ If you are interested in participating in development, you will likely also want
 
 If you discovered this project through your Linux Users Group, reach out to the person who referred you for information about how to join the team chats. We may create a more public chat option soon to further improve collaboration.
 
+
+## Task tracker
+Talk to the team about this if you want tasks
+
+
+## Workflow and Pull Request standards
+
+The workflow is essentially Github Flow/Fork and pull request
+
+Wherever possible, especially when making a pull request, make sure:
+- Any new code is unit tested as much as reasonably possible
+- no identifying information is present in code or tests (such as real identifiers from real config data)
+- do not commit any secrets or anything that requires authentication in order to get.
+- try to keep your code formatted, well documented, and idiomatic to common rust conventions. You cna use `clippy` if you want to check your code
+

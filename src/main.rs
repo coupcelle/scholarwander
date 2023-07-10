@@ -12,9 +12,6 @@ use serde_xml_rs::de::from_str;
 
 mod cloudconfig;
 
-#[cfg(test)]
-mod tests;
-
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
 struct Args {

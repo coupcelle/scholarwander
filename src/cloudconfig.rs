@@ -363,3 +363,92 @@ impl Display for CloudConfig {
         write!(f, "CloudConfig({})", self.organization.name)
     }
 }
+
+
+#[cfg(test)]
+mod tests {
+	use crate::cloudconfig::{CloudConfig, Subscription, Organization, DC};
+	use serde_xml_rs::{from_str};
+
+
+	#[test]
+	/// Ensure that the subscription portion of the XML can parse correctly
+	/// 
+ 	/// All identifying data has been replaced with dummy values
+	fn parsing_subscription_xml() {
+
+		let result: Subscription = from_str(
+			"<subscription>
+				<purchaseDate>1689014373000</purchaseDate>
+				<purchaseExpireDate>1736562706000</purchaseExpireDate>
+				<supportExpireDate>1736562706000</supportExpireDate>
+			</subscription>").unwrap();
+	}
+
+
+	#[test]
+	/// Ensure that the organization portion of the XML can parse correctly
+	/// 
+	/// All identifying data has been replaced with dummy values
+	fn parsing_organization_xml() {
+
+		let result: Organization = from_str(
+			"<organization>
+				<name>The Best Test University</name>
+				<normalizedName>The_Best_Test_University</normalizedName>
+				<domainName>test.edu</domainName>
+				<UID>12345</UID>
+			</organization>").unwrap();
+	}
+
+	#[test]
+	/// Ensure that the configurations portion of the XML can parse mostly correctly
+	/// 
+	/// All identifying data has been replaced with dummy values and some
+	/// structures (i.e. items in a list) have had items removed to make them shorter
+	fn parsing_configurations_xml() {
+
+		let result: DC = from_str(
+			"<configurations>
+				<deviceConfiguration id=\"54321\">
+					<name>eduroam</name>
+					<profileUUID>151C1232-278C-4B2D-BD63-5AAA2C926738</profileUUID>
+					<requireAdminPrivileges>true</requireAdminPrivileges>
+					<customization>
+						<resources>
+							<resource>
+								<locales>
+									<locale>en</locale>
+								</locales>
+								<strings>
+									<string>
+										<id>4</id>
+										<text>Help</text>
+									</string>
+								</strings>
+							</resource>
+						</resources>
+					</customization>
+					<enforceScreenLock>false</enforceScreenLock>
+					<enableForgetSSIDSteps>false</enableForgetSSIDSteps>
+					<enableTLSMigration>false</enableTLSMigration>
+					<reporting>
+						<handlers>
+							<handler type=\"1\" />
+						</handlers>
+					</reporting>
+					<actions>
+						<action type=\"1\">
+							<failAction>2</failAction>
+							<removeOnFailure>false</removeOnFailure>
+							<minimumVersion>0.5.7</minimumVersion>
+						</action>
+					</actions>
+				</deviceConfiguration>
+			</configurations>
+			</paladinResponse>"
+		).unwrap();
+	}
+
+}
+

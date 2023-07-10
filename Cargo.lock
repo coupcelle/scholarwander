@@ -1052,6 +1052,7 @@ dependencies = [
  "openssl",
  "serde",
  "serde-xml-rs",
+ "serde_repr",
 ]
 
 [[package]]

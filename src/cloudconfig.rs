@@ -1,5 +1,6 @@
 
 use serde::{Deserialize, Serialize};
+use serde_repr::*;
 use serde_xml_rs::{from_str, to_string, Error};
 use std::fmt::Display;
 use std::fmt;
@@ -29,17 +30,35 @@ pub struct LocaleString{
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct Resources {
-	pub locales: Vec<String>,
-	pub strings: Vec<LocaleString>,
+pub struct Res {
+	pub resources: Vec<Res2>,
+}
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct Res2 {
+	pub resource: Vec<Resource>,
 }
 
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct Resource {
+	pub locales: Vec<Loc>,
+	pub strings: Vec<LocString>,
+}
 
-// #[derive(Debug, Serialize, Deserialize, PartialEq)]
-// struct Locale{
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct Loc {
+	pub locale: Vec<Locales>,
+}
 
-// }
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct Locales {
+	#[serde(rename = "$value")]
+	pub locale: String
+}
 
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct LocString {
+	pub string: Vec<LocaleString>,
+}
 
 
 // #[derive(Debug, Serialize, Deserialize, PartialEq)]
@@ -49,18 +68,26 @@ pub struct Resources {
 // 	THREE = 3,
 // }
 
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct Hand {
+	pub handlers: Vec<Hand2>,
+}
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct Hand2 {
+	pub handler: Vec<Handler>,
+}
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct Handler {
 	#[serde(rename = "type")]
 	pub handlerType: u8,
-	pub enable: bool,
-	pub reportUserIdentity: bool,
-	pub reportIP: bool,
-	pub server: String,
-	pub service: String,
-	pub port: u16,
-	pub useSSL: bool,
+	pub enable: Option<bool>,
+	pub reportUserIdentity: Option<bool>,
+	pub reportIP: Option<bool>,
+	pub server: Option<String>,
+	pub service: Option<String>,
+	pub port: Option<u16>,
+	pub useSSL: Option<bool>,
 }
 
 
@@ -69,7 +96,8 @@ pub struct Handlers {
 	pub handlers: Vec<Handler>,
 }
 
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[derive(Serialize_repr, Deserialize_repr, PartialEq, Debug)]
+#[repr(u8)]
 pub enum ActionType { 
 	NONE                    = 0,
 	REPORT                  = 1,
@@ -120,18 +148,22 @@ pub enum ActionType {
 pub struct Credentials {
 	#[serde(rename = "type")]
 	pub redentialsType: u8,
-	pub UID: String,
-	pub seRegex: bool,
-	pub lsEnrollment: TLSEnrollment,
+	pub UUID: String,
+	pub useRegex: bool,
+	#[serde(rename = "TLSEnrollment")]
+	pub tlsEnrollment: TLSEnrollment,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct TLSEnrollment {
 	pub protocol: u8,
 	pub URL: String,
+	#[serde(rename = "CAIdentity")]
 	pub caIdentity: String,
 	pub keySize: u16,
+	#[serde(rename = "SANType")]
 	pub sanType: u8,
+	#[serde(rename = "PKIClient")]
 	pub pkiClient: PKIClient,
 	pub useTPM: bool,
 	pub requireTPM: bool,
@@ -147,11 +179,6 @@ pub struct PKIClient{
 	pub forcePKIClient: bool,
 }
 
-
-#[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct Certificate{
-	pub data: String
-}
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct WlanProfile {
@@ -202,7 +229,7 @@ pub struct EAP {
 	pub eapMethod: String,//TODO: make me an enum
 	pub authorId: u8,
 	pub enableServerValidation: bool,
-	pub caCertificates: Vec<CACertificate>, 
+	pub caCertificates: Vec<Certificate>, 
 	pub serverNames: String,
 	pub useRegex: bool,
 	pub enableFastReconnect: bool,
@@ -216,12 +243,13 @@ pub struct EAP {
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct CACertificate{
-	pub alias: String,
-	pub fingerPrint: String,
-	pub useSystemStore: bool,
-	pub useDpiSSL: bool,
-	pub useFirefoxCertStore: bool,
+pub struct Certificate {
+	pub alias: Option<String>,
+	pub fingerPrint: Option<String>,
+	pub useSystemStore: Option<bool>,
+	pub data: Option<String>,
+	pub useDpiSSL: Option<bool>,
+	pub useFirefoxCertStore: Option<bool>,
 }
 
 
@@ -238,28 +266,42 @@ pub struct SecureW2 {
 	pub bypassBalloonNotification: bool
 }
 
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct Act {
+	pub action: Vec<Action>,
+}
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct Action {
 	#[serde(rename = "type")]
 	pub actionType: ActionType,
-	pub failAction: u8,
+	pub failAction: Option<u8>,
 	pub removeOnFailure: bool,
 	pub enable: Option<bool>,
 	pub minimumVersion: Option<String>,
-	pub customization: Option<Resources>,
+	pub customization: Option<Res>,
 	pub credentials: Option<Credentials>,
 	pub removeSSID: Option<RemoveSSID>,
 	pub wlanProfile: Option<WlanProfile>,
-	pub deviceMatches: Option<Vec<DeviceMatch>>,
+	pub deviceMatches: Option<DevMat>,
 	pub checkForIP: Option<bool>
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct DeviceMatch {
-	pub deviceMatchAttributes: Vec<DeviceMatchAttribute>
+pub struct DevMat {
+	pub deviceMatch: Vec<DeviceMatch>,
+
 }
 
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct DeviceMatch {
+	pub deviceMatchAttributes: Vec<DevMatAtt>
+}
+
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct DevMatAtt {
+	pub deviceMatchAttribute: Vec<DeviceMatchAttribute>
+}
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct DeviceMatchAttribute {
@@ -275,21 +317,26 @@ pub struct RemoveSSID {
 	pub removeType: u8
 }
 
-
+#[derive(Debug, Serialize, Deserialize, PartialEq)]
+pub struct DC {
+	pub deviceConfiguration: Vec<DeviceConfiguration>
+}
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
-pub struct Configuration {
+pub struct DeviceConfiguration {
+	#[serde(rename = "id")]
+	pub identifier: u16,
 	pub name: String,
 	pub profileUUID: String,
-	pub customization: Resources,
+	pub customization: Res,
 	pub requireAdminPrivileges: bool,
 	pub enforceScreenLock: bool,
 	pub enableForgetSSIDSteps: bool,
 	pub enableTLSMigration: bool,
 	pub mobileconfigDescriptionMacOS: String,
 	pub mobileconfigDescriptionIOS: String,
-	pub reporting: Handlers,
-	pub actions: Vec<Action>,
+	pub reporting: Hand,
+	pub actions: Vec<Act>,
 }
 
 
@@ -299,7 +346,8 @@ pub struct Configuration {
 pub struct CloudConfig {
     pub subscription: Subscription,
 	pub organization: Organization,
-	pub configurations: Vec<Configuration>,
+	// #[serde(rename = "$value")]
+	pub configurations: DC,
 }
 
 impl CloudConfig {

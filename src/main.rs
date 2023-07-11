@@ -92,7 +92,7 @@ fn main() -> wry::Result<()> {
     let event_loop = EventLoop::new();
     let proxy = event_loop.create_proxy();
     let window = WindowBuilder::new()
-        .with_title("Hello World")
+        .with_title("ScholarWander SSO Browser")
         .build(&event_loop)?;
     let _webview = WebViewBuilder::new(window)?
         .with_url(&url)?//url
@@ -119,7 +119,7 @@ fn main() -> wry::Result<()> {
         *control_flow = ControlFlow::Wait;
 
         match event {
-        Event::NewEvents(StartCause::Init) => println!("Wry has started!"),
+        Event::NewEvents(StartCause::Init) => println!("Opening browser window for SSO..."),
         Event::UserEvent(event) => *control_flow = ControlFlow::Exit,
         Event::WindowEvent {
             event: WindowEvent::CloseRequested,

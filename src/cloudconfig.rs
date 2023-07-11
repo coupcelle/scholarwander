@@ -335,7 +335,7 @@ pub struct DeviceConfiguration {
 	pub customization: Res,
 	pub requireAdminPrivileges: bool,
 	pub enforceScreenLock: bool,
-	pub enableForgetSSIDSteps: bool,
+	pub enableForgetSSIDSteps: Option<bool>,
 	pub enableTLSMigration: bool,
 	pub mobileconfigDescriptionMacOS: Option<String>,
 	pub mobileconfigDescriptionIOS: Option<String>,

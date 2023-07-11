@@ -4,7 +4,7 @@
 
 Audience: LUG members and other techies interested in a FOSS alternativel to SecureW2
 
-Platform: NetworkManager initially
+Platform: NetworkManager on a Debian/Ubuntu based OS
 
 Schools Supported: RIT and NCSU
 

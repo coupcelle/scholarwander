@@ -36,6 +36,21 @@ struct Args {
     cloudconfig: String,
 }
 
+fn clearCredentials() {
+    let stateentry = Entry::new(PROGRAM_NAME, STATE_ID_STORAGE_KEY).unwrap();
+    // .map_err(|err| {
+    //                         return "Failed to get create stateentry : {}", err);;
+	let codeentry = Entry::new(PROGRAM_NAME, AUTH_CODE_STORAGE_KEY).unwrap();
+    // .map_err(|err| {
+    //                         return "Failed to create code : {}", err);;
+	stateentry.delete_password().unwrap();
+    // .map_err(|err| {
+    //                         return "Failed to get state : {}", err);
+	codeentry.delete_password().unwrap();
+}
+
+
+
 fn main() {
     let args = Args::parse();
 

@@ -8,7 +8,7 @@ use std::fmt;
 use std::fs;
 use serde_xml_rs::{Error};
 use serde_xml_rs::de::from_str;
-
+use uuid::Uuid;
 
 mod cloudconfig;
 
@@ -22,6 +22,8 @@ struct Args {
 
 fn main() {
     let args = Args::parse();
+
+    let config:CloudConfig = CloudConfig{};
 
     let cloudconfig_cipherdata: Vec<u8> =
         fs::read(args.cloudconfig).expect("Should have been able to read the file");
@@ -39,7 +41,7 @@ fn main() {
         ) {
             if let Ok(res_str) = String::from_utf8(outData.clone()) {
                 // println!("{}", res_str);
-                let config = match cloudconfig::CloudConfig::from_xml(&res_str)  {
+                config = match cloudconfig::CloudConfig::from_xml(&res_str)  {
                     Ok(cfg) => cfg,
                     Err(error)=> {
                         let jd = &mut serde_xml_rs::de::Deserializer::new_from_reader(res_str.as_bytes());
@@ -63,6 +65,11 @@ fn main() {
                     }
 
                     println!("{}", enrollmentdata);
+                    //get transaction ID (generate a new uuid4)
+                    let id = Uuid::new_v4();
+                    // open URL
+                    let url = enrollmentdata.replace("%TRANSACTIONID%", &id.to_string());
+                    println!("{}", url);
 
                 }
 

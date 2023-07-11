@@ -10,6 +10,15 @@ use serde_xml_rs::{Error};
 use serde_xml_rs::de::from_str;
 use uuid::Uuid;
 
+use wry::{
+    application::{
+      event::{Event, StartCause, WindowEvent},
+      event_loop::{ControlFlow, EventLoop},
+      window::WindowBuilder,
+    },
+    webview::WebViewBuilder,
+  };
+
 mod cloudconfig;
 
 #[derive(Parser, Debug)]
@@ -20,7 +29,7 @@ struct Args {
     cloudconfig: String,
 }
 
-fn main() {
+fn main() -> wry::Result<()> {
     let args = Args::parse();
 
     let mut config:Option<cloudconfig::CloudConfig> = None;
@@ -53,6 +62,8 @@ fn main() {
         }
     }
 
+    let mut url:String = "https://tauri.studio".to_string();
+
     if let Some(cloudconfig) = config {
         println!("{}", cloudconfig);
         if let Some(creds) = &cloudconfig.configurations.deviceConfiguration[0].actions[0].action[1].credentials {
@@ -70,12 +81,33 @@ fn main() {
             //get transaction ID (generate a new uuid4)
             let id = Uuid::new_v4();
             // open URL
-            let url = enrollmentdata.replace("%TRANSACTIONID%", &id.to_string());
+            url = enrollmentdata.replace("%TRANSACTIONID%", &id.to_string());
             println!("{}", url);
 
             // log stuff and see what happens, maybe run nc -l <port> to listen for the callback???
 
         }
     }
+
+    let event_loop = EventLoop::new();
+    let window = WindowBuilder::new()
+        .with_title("Hello World")
+        .build(&event_loop)?;
+    let _webview = WebViewBuilder::new(window)?
+        .with_url(&url)?//url
+        .build()?;
+
+    event_loop.run(move |event, _, control_flow| {
+        *control_flow = ControlFlow::Wait;
+
+        match event {
+        Event::NewEvents(StartCause::Init) => println!("Wry has started!"),
+        Event::WindowEvent {
+            event: WindowEvent::CloseRequested,
+            ..
+        } => *control_flow = ControlFlow::Exit,
+        _ => (),
+        }
+    });
     
 }

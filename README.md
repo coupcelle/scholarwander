@@ -16,6 +16,8 @@ This program links to OpenSSL so you should have openssl installed. The Debian/U
 
 This program also will (at some point in the future) link to networkManager. See [here](https://github.com/truehumandesign/networkmanager-rs#build-prerequisites) for full build prerequisites. Debian/Ubuntu users should ensure the following packages are installed `network-manager libdbus-1-dev pkg-config`.
 
+This program also links to some [platform specific web libraries](https://github.com/tauri-apps/wry#platform-specific-notes) to support being able to display a browser for SSO. Debian/Ubuntu users should run the following command to ensure the packages are installed `sudo apt install libwebkit2gtk-4.1-dev`.
+
 To build run `cargo build`
 
 

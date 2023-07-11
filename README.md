@@ -14,6 +14,8 @@ Timeline: By Aug 10, 2023
 
 This program links to OpenSSL so you should have openssl installed. The Debian/Ubuntu way to do this is using the command `sudo apt-get install pkg-config libssl-dev`, Commands for other systems can be found [here](https://docs.rs/openssl/latest/openssl/#automatic).
 
+This program also will (at some point in the future) link to networkManager. See [here](https://github.com/truehumandesign/networkmanager-rs#build-prerequisites) for full build prerequisites. Debian/Ubuntu users should ensure the following packages are installed `network-manager libdbus-1-dev pkg-config`.
+
 To build run `cargo build`
 
 

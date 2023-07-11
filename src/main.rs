@@ -65,7 +65,6 @@ fn main() -> wry::Result<()> {
     let mut url:String = "https://tauri.studio".to_string();
 
     if let Some(cloudconfig) = config {
-        println!("{}", cloudconfig);
         if let Some(creds) = &cloudconfig.configurations.deviceConfiguration[0].actions[0].action[1].credentials {
             let enrollmentdata = match &creds.tlsEnrollment {
                 Some(tlsEnrollment) => &tlsEnrollment.webSSOUrl.as_str(),
@@ -83,9 +82,6 @@ fn main() -> wry::Result<()> {
             // open URL
             url = enrollmentdata.replace("%TRANSACTIONID%", &id.to_string());
             println!("{}", url);
-
-            // log stuff and see what happens, maybe run nc -l <port> to listen for the callback???
-
         }
     }
 

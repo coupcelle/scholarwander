@@ -17,7 +17,7 @@ This url looks something like `https://[domain].securew2.com/auth/[uuid]/[differ
 Here are some interesting parts that we can mostly ignore:
 - `response_type=code` - specifies which oauth2 flow/procedure we are using
 - `client_id=clientid` - yes it appears this is the real client id for all SecureW2 SSO flows
-- `redirect_uri=urn:ietf:wg:oauth:2.0:oob:auto` - Apparrently this is part of the Oauth standard. It sends the user to a page containing the auth codes and telling the user to close their browser window.
+- `redirect_uri=urn:ietf:wg:oauth:2.0:oob:auto` - Apparrently this is some [now-deprecated](https://developers.google.com/identity/protocols/oauth2/resources/oob-migration) [google standard](https://googleapis.dev/ruby/google-api-client/v0.36.3/file.oauth-installed.html) that essentially tells the auth server to redirect to a page containing the auth codes that also tells the user to close their browser window.
 - `scope=test` - lol nothing more permanant than a temporary solution I guess
 
 

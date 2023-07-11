@@ -137,17 +137,21 @@ pub enum ActionType {
 	_LAST_                  = 35,
 }
 
-// #[derive(Debug, Serialize, Deserialize, PartialEq)]
-// enum CredentialsType { 
-// 	ONE = 1,
-// 	TWO = 2,
-// 	THREE = 3,
-// }
+#[derive(Serialize_repr, Deserialize_repr, PartialEq, Debug)]
+#[repr(u8)]
+pub enum CredentialsType { 
+	USERNAMEPASSWORD               = 0,
+	USERNAMEPASSWORD_TLSENROLLMENT = 1,
+	WEBSSO_TLSENROLLMENT           = 2,
+	SHAREDSECRET                   = 3,
+	OSLOGONCREDS                   = 4,
+	OSLOGONCREDS_TLSENROLLMENT     = 5,
+}
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct Credentials {
 	#[serde(rename = "type")]
-	pub redentialsType: u8,
+	pub credentialsType: CredentialsType,
 	pub UUID: String,
 	pub useRegex: bool,
 	#[serde(rename = "TLSEnrollment")]

@@ -23,12 +23,10 @@ struct Args {
 fn main() {
     let args = Args::parse();
 
-    let config:CloudConfig = CloudConfig{};
+    let mut config:Option<cloudconfig::CloudConfig> = None;
 
     let cloudconfig_cipherdata: Vec<u8> =
         fs::read(args.cloudconfig).expect("Should have been able to read the file");
-
-    let config = cms::CMSOptions::NO_SIGNER_CERT_VERIFY;
 
     if let Ok(mut cmsinfo) = cms::CmsContentInfo::from_der(&cloudconfig_cipherdata) {
         let mut outData: Vec<u8> = Vec::new();
@@ -37,12 +35,12 @@ fn main() {
             None,               //store:
             None,               //detached_data:
             Some(&mut outData), //output_data:
-            config,             //flags:
+            cms::CMSOptions::NO_SIGNER_CERT_VERIFY,//flags:
         ) {
             if let Ok(res_str) = String::from_utf8(outData.clone()) {
                 // println!("{}", res_str);
                 config = match cloudconfig::CloudConfig::from_xml(&res_str)  {
-                    Ok(cfg) => cfg,
+                    Ok(cfg) => Some(cfg),
                     Err(error)=> {
                         let jd = &mut serde_xml_rs::de::Deserializer::new_from_reader(res_str.as_bytes());
                         let result: Result<cloudconfig::CloudConfig, _> = serde_path_to_error::deserialize(jd).map_err(|err| {
@@ -51,30 +49,33 @@ fn main() {
                         panic!("{}", error)
                     }
                 };
-            
-                println!("{}", config);
-                if let Some(creds) = &config.configurations.deviceConfiguration[0].actions[0].action[1].credentials {
-                    let enrollmentdata = match &creds.tlsEnrollment {
-                        Some(tlsEnrollment) => &tlsEnrollment.webSSOUrl.as_str(),
-                        None => "Web SSO is not used for auth"
-                    };
-
-                    //crude way to detect whether or not a webSSO url is present and enf the program early if it isnt. most of these urls are gonna be way ofer 30 chars
-                    if enrollmentdata.len() < 30 {
-                        panic!("{}", enrollmentdata);
-                    }
-
-                    println!("{}", enrollmentdata);
-                    //get transaction ID (generate a new uuid4)
-                    let id = Uuid::new_v4();
-                    // open URL
-                    let url = enrollmentdata.replace("%TRANSACTIONID%", &id.to_string());
-                    println!("{}", url);
-
-                }
-
             }
-            
         }
     }
+
+    if let Some(cloudconfig) = config {
+        println!("{}", cloudconfig);
+        if let Some(creds) = &cloudconfig.configurations.deviceConfiguration[0].actions[0].action[1].credentials {
+            let enrollmentdata = match &creds.tlsEnrollment {
+                Some(tlsEnrollment) => &tlsEnrollment.webSSOUrl.as_str(),
+                None => "Web SSO is not used for auth"
+            };
+
+            //crude way to detect whether or not a webSSO url is present and enf the program early if it isnt. most of these urls are gonna be way ofer 30 chars
+            if enrollmentdata.len() < 30 {
+                panic!("{}", enrollmentdata);
+            }
+
+            println!("{}", enrollmentdata);
+            //get transaction ID (generate a new uuid4)
+            let id = Uuid::new_v4();
+            // open URL
+            let url = enrollmentdata.replace("%TRANSACTIONID%", &id.to_string());
+            println!("{}", url);
+
+            // log stuff and see what happens, maybe run nc -l <port> to listen for the callback???
+
+        }
+    }
+    
 }

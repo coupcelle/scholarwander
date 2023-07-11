@@ -9,6 +9,7 @@ use std::fs;
 use serde_xml_rs::{Error};
 use serde_xml_rs::de::from_str;
 use uuid::Uuid;
+use keyring::Entry;
 
 use wry::{
     application::{
@@ -20,6 +21,11 @@ use wry::{
   };
 
 mod cloudconfig;
+
+pub const PROGRAM_NAME: &'static str = "scholarwander";
+pub const STATE_ID_STORAGE_KEY: &'static str = "state";
+pub const AUTH_CODE_STORAGE_KEY: &'static str = "code";
+
 
 #[derive(Parser, Debug)]
 #[command(author, version, about, long_about = None)]
@@ -100,8 +106,10 @@ fn main() -> wry::Result<()> {
 
                 let state = params[0];
                 let code = params[1];
-                println!("{}", state.1);
-                println!("{}", code.1);
+                let stateentry = Entry::new(PROGRAM_NAME, STATE_ID_STORAGE_KEY).unwrap();
+                let codeentry = Entry::new(PROGRAM_NAME, AUTH_CODE_STORAGE_KEY).unwrap();
+                stateentry.set_password(state.1).unwrap();
+                codeentry.set_password(code.1).unwrap();
                 
                 // trigger an event that can be detected and
                 // used to close the window
@@ -124,5 +132,21 @@ fn main() -> wry::Result<()> {
         _ => (),
         }
     });
+
+    
+
+    let stateentry = Entry::new(PROGRAM_NAME, STATE_ID_STORAGE_KEY).unwrap();
+    // .map_err(|err| {
+    //                         return "Failed to get create stateentry : {}", err);;
+	let codeentry = Entry::new(PROGRAM_NAME, AUTH_CODE_STORAGE_KEY).unwrap();
+    // .map_err(|err| {
+    //                         return "Failed to create code : {}", err);;
+	println!("{}", stateentry.get_password().unwrap());
+    // .map_err(|err| {
+    //                         return "Failed to get state : {}", err);
+	println!("{}", codeentry.get_password().unwrap());
+    // .map_err(|err| {
+    //                         return "Failed to get code : {}", err);
+    println!("Done");
     
 }

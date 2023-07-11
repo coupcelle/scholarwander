@@ -56,6 +56,12 @@ fn main() {
                         Some(tlsEnrollment) => &tlsEnrollment.webSSOUrl.as_str(),
                         None => "Web SSO is not used for auth"
                     };
+
+                    //crude way to detect whether or not a webSSO url is present and enf the program early if it isnt. most of these urls are gonna be way ofer 30 chars
+                    if enrollmentdata.len() < 30 {
+                        panic!("{}", enrollmentdata);
+                    }
+
                     println!("{}", enrollmentdata);
 
                 }

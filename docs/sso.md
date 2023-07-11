@@ -32,7 +32,12 @@ After the user has been through the rollercoaster of URLs, redirects, and login 
 
 This page will likely have a URL thats something like `https://[domain].securew2.com/auth/success?sessionId=<token>&state=<state UUID>&xsrfsign=`.
 
-This URL, and indeed the resulting webpage as a whole, contains both a token (AKA sessionID AKA code) that allows us to authenticate future API calls. In addition to the URL, this token is also present in the HTML `<title>` element.
+This URL, and indeed the resulting webpage as a whole, contains both a token (AKA sessionID AKA code) that allows us to authenticate future API calls. In addition to the URL, this token is also present in the HTML `<title>` element in the following format:
+
+`Success state=[state uuid created earlier]&code=[code]&`
+
+
+The code isn't an access token because typically these codes are sent to the client as query parameters, which is insecure. 
 
 
 

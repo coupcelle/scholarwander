@@ -90,11 +90,29 @@ fn main() -> wry::Result<()> {
     }
 
     let event_loop = EventLoop::new();
+    let proxy = event_loop.create_proxy();
     let window = WindowBuilder::new()
         .with_title("Hello World")
         .build(&event_loop)?;
     let _webview = WebViewBuilder::new(window)?
         .with_url(&url)?//url
+        .with_document_title_changed_handler( move |window, title | {
+            if title.as_str().starts_with("Success") {
+                let data: Vec<&str> = title.as_str().split(' ').collect();
+                println!("{}", data[1]);
+                let params = querystring::querify(data[1]);
+
+                let state = params[0];
+                let code = params[1];
+                println!("{}", state.1);
+                println!("{}", code.1);
+                
+                // trigger an event that can be detected and
+                // used to close the window
+                proxy.send_event(());
+
+            }
+        })
         .build()?;
 
     event_loop.run(move |event, _, control_flow| {
@@ -102,6 +120,7 @@ fn main() -> wry::Result<()> {
 
         match event {
         Event::NewEvents(StartCause::Init) => println!("Wry has started!"),
+        Event::UserEvent(event) => *control_flow = ControlFlow::Exit,
         Event::WindowEvent {
             event: WindowEvent::CloseRequested,
             ..

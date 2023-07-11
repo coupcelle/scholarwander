@@ -15,6 +15,7 @@ serde_path_to_error = "0.1"
 serde_repr = "0.1"
 networkmanager = "0.4.0"
 wry = "0.29.0"
+querystring = "1.1.0"
 
 [dependencies.uuid]
 version = "1.4.0"

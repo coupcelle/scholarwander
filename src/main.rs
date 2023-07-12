@@ -6,8 +6,7 @@ use openssl::cms;
 use std::env;
 use std::fmt;
 use std::fs;
-use serde_xml_rs::{Error};
-use serde_xml_rs::de::from_str;
+
 use uuid::Uuid;
 use keyring::Entry;
 
@@ -22,6 +21,7 @@ use wry::{
   };
 
 mod cloudconfig;
+mod utils;
 
 pub const PROGRAM_NAME: &'static str = "scholarwander";
 pub const STATE_ID_STORAGE_KEY: &'static str = "state";
@@ -73,10 +73,8 @@ fn main() {
                 config = match cloudconfig::CloudConfig::from_xml(&res_str)  {
                     Ok(cfg) => Some(cfg),
                     Err(error)=> {
-                        let jd = &mut serde_xml_rs::de::Deserializer::new_from_reader(res_str.as_bytes());
-                        let result: Result<cloudconfig::CloudConfig, _> = serde_path_to_error::deserialize(jd).map_err(|err| {
-                            return println!("Failed to parse : {}", err);//'{}', res_str
-                        });
+
+                        utils::handle_parse_error::<cloudconfig::CloudConfig>(res_str);
                         panic!("{}", error)
                     }
                 };

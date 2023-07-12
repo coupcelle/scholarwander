@@ -11,17 +11,11 @@ use serde_xml_rs::de::from_str;
 use uuid::Uuid;
 use keyring::Entry;
 
-use wry::{
-    application::{
-      event::{Event, StartCause, WindowEvent},
-      event_loop::{ControlFlow, EventLoop},
-      platform::run_return::EventLoopExtRunReturn,
-      window::WindowBuilder,
-    },
-    webview::WebViewBuilder,
-  };
+
 
 mod cloudconfig;
+mod embeddedbrowser;
+use crate::embeddedbrowser::{EmbeddedBrowser, EventLoopProxy};
 
 pub const PROGRAM_NAME: &'static str = "scholarwander";
 pub const STATE_ID_STORAGE_KEY: &'static str = "state";
@@ -107,14 +101,10 @@ fn main() {
         }
     }
 
-    let mut event_loop = EventLoop::new();
-    let proxy = event_loop.create_proxy();
-    let window = WindowBuilder::new()
-        .with_title("ScholarWander SSO Browser")
-        .build(&event_loop).unwrap();
-    let _webview = WebViewBuilder::new(window).unwrap()
-        .with_url(&url).unwrap()//url
-        .with_document_title_changed_handler( move |window, title | {
+    EmbeddedBrowser::show_page(
+        Some("ScholarWander SSO Browser".to_string()),
+        url.to_string(),
+        Some(move | _, proxy: EventLoopProxy<()>, title: String | {
             if title.as_str().starts_with("Success") {
                 let data: Vec<&str> = title.as_str().split(' ').collect();
                 println!("{}", data[1]);
@@ -133,21 +123,10 @@ fn main() {
 
             }
         })
-        .build().unwrap();
+    );
+        
 
-    event_loop.run_return(move |event, _, control_flow| {
-        *control_flow = ControlFlow::Wait;
-
-        match event {
-        Event::NewEvents(StartCause::Init) => println!("Opening browser window for SSO..."),
-        Event::UserEvent(event) => *control_flow = ControlFlow::Exit,
-        Event::WindowEvent {
-            event: WindowEvent::CloseRequested,
-            ..
-        } => *control_flow = ControlFlow::Exit,
-        _ => (),
-        }
-    });
+   
 
     
 

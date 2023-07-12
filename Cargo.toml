@@ -9,4 +9,18 @@ edition = "2021"
 clap = { version = "4.3.11", features = ["derive"] }
 keyring = "2.0.4"
 openssl = "0.10.55"
-xml-rs = "0.8.15"
+serde-xml-rs = "0.6.0"
+serde = "1.0.171"
+serde_path_to_error = "0.1"
+serde_repr = "0.1"
+networkmanager = "0.4.0"
+wry = "0.29.0"
+querystring = "1.1.0"
+
+[dependencies.uuid]
+version = "1.4.0"
+features = [
+    "v4",                # Lets you generate random UUIDs
+    "fast-rng",          # Use a faster (but still sufficiently random) RNG
+    "macro-diagnostics", # Enable better diagnostics for compile-time UUIDs
+]
